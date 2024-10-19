@@ -11,8 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: tgymnich/fork-sync@v1.9
+      - uses: actions/checkout@v4
         with:
-          owner: RootHide
-          base: master
-          head: master
+          fetch-depth: 0
+          submodules: true
+
+      - name: Merge upstream changes
+        run: |
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git remote add upstream https://github.com/theos/lib.git
+          git checkout master && git fetch upstream && git merge upstream/master
+          git push origin master
